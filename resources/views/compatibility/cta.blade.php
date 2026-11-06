@@ -1,0 +1,1 @@
+<section {{ $attributes->class(['content-cta']) }}><h2>{{ $props['heading'] ?? '' }}</h2>@if ($props['url'])<a class="button" href="{{ $props['url'] }}">{{ $props['label'] ?? '' }}</a>@endif</section>

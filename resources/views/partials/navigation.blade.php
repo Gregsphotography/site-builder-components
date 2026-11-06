@@ -1,0 +1,1 @@
+<ul>@foreach ($items as $item)<li><a href="{{ $item['url'] }}">{{ $item['label'] }}</a>@if ($item['children'])@include('site-builder-components::partials.navigation', ['items' => $item['children']])@endif</li>@endforeach</ul>

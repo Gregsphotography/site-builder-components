@@ -1,0 +1,68 @@
+{
+    "name": "gregsphotography/site-builder-components",
+    "description": "Installable standard content components, scoped themes, templates and optional local media for Laravel Site Builder.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "gregsphotography/site-builder-core": "0.3.0-rc.8",
+        "illuminate/filesystem": "^13.40"
+    },
+    "autoload": {
+        "psr-4": {
+            "SiteBuilder\\Components\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SiteBuilder\\Components\\ComponentsServiceProvider"
+            ]
+        }
+    },
+    "archive": {
+        "exclude": [
+            "/tests",
+            "/tools",
+            "/vendor",
+            "/node_modules",
+            "/.github",
+            "/.phpunit.cache",
+            "/composer.lock",
+            "/package.json",
+            "/package-lock.json",
+            "/phpunit.xml",
+            "/.gitignore",
+            "/.gitattributes",
+            "/CONTRIBUTING.md"
+        ]
+    },
+    "conflict": {
+        "p2data/site-builder-components": "*"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.24",
+        "laravel/pint": "^1.32",
+        "orchestra/testbench": "^11.0",
+        "phpunit/phpunit": "^12.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SiteBuilder\\Components\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "format:check": "pint --test"
+    },
+    "config": {
+        "allow-plugins": false,
+        "sort-packages": true,
+        "platform": {
+            "php": "8.5.0"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/Gregsphotography/site-builder-components/issues"
+    }
+}

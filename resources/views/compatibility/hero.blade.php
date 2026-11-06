@@ -1,0 +1,1 @@
+<section {{ $attributes->class(['content-hero', 'tone-'.$props['tone']]) }}><p class="eyebrow">A PLACE TO BEGIN</p><h1>{{ $props['heading'] ?? '' }}</h1><div>{!! $props['body'] ?? '' !!}</div></section>
