@@ -6,9 +6,11 @@
     $usable = array_filter($items, fn ($item) => !empty($item['image']) && trim((($item['decorative'] ?? false) ? '' : ($item['alt'] ?? '')).($item['caption'] ?? '')) !== '');
     $enhanced = ($props['lightbox'] ?? false) && $context->mode === 'public' && $usable !== [];
     if ($enhanced) { app(\SiteBuilder\Core\Rendering\PublicAssets::class)->request('components.gallery'); }
+    $filtering = ($props['searchable'] ?? false) || ($props['filterable'] ?? false);
 @endphp
-<section {{ $attributes->class(['sb-block', 'sb-gallery']) }} id="{{ $identity }}" data-sb-gallery tabindex="-1" @if($items !== []) aria-label="{{ $props['label'] ?? __('Image gallery') }}" @endif>
+<section {{ $attributes->class(['sb-block', 'sb-gallery']) }} id="{{ $identity }}" data-sb-gallery @if($filtering) data-sb-collection @endif tabindex="-1" @if($items !== []) aria-label="{{ $props['label'] ?? __('Image gallery') }}" @endif>
     @if(!empty($props['heading']))<h2>{{ $props['heading'] }}</h2>@endif
+    @if($filtering) @include('site-builder-components::partials.collection-controls') @endif
     <div class="sb-gallery-grid sb-gallery-grid--{{ $props['columns'] ?? 'three' }}">
     @foreach($items as $item)
         @php
@@ -18,7 +20,7 @@
             $trigger = $enhanced && $image && $full && $description !== '';
             $destination = $links->url($item['page'] ?? null, $item['url'] ?? null, $context->locale);
         @endphp
-        <figure class="sb-gallery-item">
+        <figure class="sb-gallery-item" @if($filtering) data-sb-collection-item data-search="{{ ($item['caption'] ?? '').' '.($item['alt'] ?? '') }}" data-tags="{{ json_encode(array_map(fn($tag) => $tag->label, $item['tags'] ?? []), JSON_UNESCAPED_UNICODE) }}" @endif>
             @if($image)
                 @if($description !== '' && $full)<a href="{{ $full }}" @if($trigger) data-sb-gallery-image aria-haspopup="dialog" aria-controls="{{ $identity }}-dialog" @endif aria-label="{{ __('Enlarge image: :description', ['description' => $description]) }}">@endif
                 <img src="{{ $image }}" @if($srcset = $images->srcset($item['sources'] ?? [])) srcset="{{ $srcset }}" sizes="(max-width: 48rem) 100vw, 50vw" @endif alt="{{ ($item['decorative'] ?? false) ? '' : ($item['alt'] ?? '') }}" @if(!empty($item['width'])) width="{{ $item['width'] }}" @endif @if(!empty($item['height'])) height="{{ $item['height'] }}" @endif loading="lazy" @if($trigger) data-sb-gallery-alt="{{ ($item['decorative'] ?? false) ? '' : ($item['alt'] ?? '') }}" @endif>

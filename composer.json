@@ -5,8 +5,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "gregsphotography/site-builder-core": "0.3.0-rc.11",
-        "illuminate/filesystem": "^13.40"
+        "gregsphotography/site-builder-core": "0.4.0-rc.2",
+        "illuminate/filesystem": "^13.40",
+        "illuminate/mail": "^13.40",
+        "illuminate/queue": "^13.40"
     },
     "autoload": {
         "psr-4": {

@@ -1,0 +1,7 @@
+{
+  "heroicons": "blade-ui-kit/blade-heroicons 2.7.0 (bundled upstream SVGs)",
+  "simple_icons": {
+    "repository": "https://github.com/simple-icons/simple-icons",
+    "commit": "1bb2f6e6ea50f920de8d2f3d273ae48564a5eaee"
+  }
+}

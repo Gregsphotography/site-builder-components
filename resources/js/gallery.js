@@ -15,7 +15,8 @@ export function initializeGalleries(scope = document) {
         const dialog = root.querySelector('[data-sb-gallery-dialog]');
         if (!dialog || typeof dialog.showModal !== 'function') continue;
         initialized.add(root);
-        const triggers = [...root.querySelectorAll('[data-sb-gallery-image]')];
+        const allTriggers = [...root.querySelectorAll('[data-sb-gallery-image]')];
+        let triggers = allTriggers.filter(trigger => !trigger.closest('[data-sb-collection-item]')?.hidden);
         const close = dialog.querySelector('[data-sb-gallery-close]');
         const previous = dialog.querySelector('[data-sb-gallery-previous]');
         const next = dialog.querySelector('[data-sb-gallery-next]');
@@ -49,7 +50,7 @@ export function initializeGalleries(scope = document) {
             image.removeAttribute('src');
             // Native modality owns background inertness. Never rewrite a host's scroll or inert state.
             if (document.querySelector('dialog[open]')) { opener = null; return; }
-            let target = opener?.isConnected ? opener : root.isConnected ? root : document.querySelector('main');
+            let target = opener?.isConnected && !opener.closest('[hidden]') ? opener : root.isConnected ? root : document.querySelector('main');
             if (target) {
                 const temporary = !target.hasAttribute('tabindex') && target.tagName !== 'A';
                 if (temporary) target.setAttribute('tabindex', '-1');
@@ -58,7 +59,10 @@ export function initializeGalleries(scope = document) {
             }
             opener = null;
         };
-        triggers.forEach((trigger, selected) => trigger.addEventListener('click', event => {
+        allTriggers.forEach(trigger => trigger.addEventListener('click', event => {
+            triggers = allTriggers.filter(item => !item.closest('[data-sb-collection-item]')?.hidden);
+            const selected = triggers.indexOf(trigger);
+            if (selected < 0) return;
             if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || dialog.open || document.querySelector('dialog[open]')) return;
             try { dialog.showModal(); } catch { return; }
             event.preventDefault();
@@ -72,6 +76,10 @@ export function initializeGalleries(scope = document) {
             removal.observe(document.documentElement, { childList: true, subtree: true });
         }));
         close.addEventListener('click', () => dialog.close());
+        root.addEventListener('sb:collection-change', () => {
+            if (dialog.open) dialog.close();
+            triggers = allTriggers.filter(trigger => !trigger.closest('[data-sb-collection-item]')?.hidden);
+        });
         dialog.addEventListener('close', finish);
         previous.addEventListener('click', () => show(adjacentIndex(index, -1, triggers.length)));
         next.addEventListener('click', () => show(adjacentIndex(index, 1, triggers.length)));

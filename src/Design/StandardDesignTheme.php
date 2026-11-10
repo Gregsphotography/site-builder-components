@@ -17,6 +17,12 @@ use WeakMap;
 final class StandardDesignTheme implements DesignTheme
 {
     private const COMPONENTS = [
+        'standard.form' => ['default'],
+        'standard.video' => ['default'], 'standard.location' => ['default'],
+        'standard.tabs' => ['default'], 'standard.tab-panel' => ['default'], 'standard.accordion' => ['default'], 'standard.accordion-item' => ['default'],
+        'standard.table' => ['default'], 'standard.table-of-contents' => ['default'], 'standard.breadcrumbs' => ['default'],
+        'standard.heading' => ['default'], 'standard.buttons' => ['default'], 'standard.icon' => ['default'],
+        'standard.icon-list' => ['default'], 'standard.social-links' => ['default'], 'standard.divider' => ['line', 'dots'], 'standard.anchor' => ['default'],
         'standard.hero' => ['centred', 'split', 'background'],
         'standard.text' => ['default', 'narrow'],
         'standard.image' => ['default', 'wide'],
@@ -71,6 +77,11 @@ final class StandardDesignTheme implements DesignTheme
     public function label(): string
     {
         return 'Standard base';
+    }
+
+    public static function componentVariants(): array
+    {
+        return self::COMPONENTS;
     }
 
     public function presets(): array

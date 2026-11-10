@@ -17,6 +17,20 @@ use SiteBuilder\Core\Rendering\LocaleCatalog;
 final class StandardExamples
 {
     private const ENTRIES = [
+        'standard.video' => ['label' => 'Video', 'category' => 'Media', 'description' => 'Uploaded video or a supported video service with captions and transcript.', 'keywords' => ['video', 'youtube', 'vimeo', 'captions']],
+        'standard.location' => ['label' => 'Location and map', 'category' => 'Information', 'description' => 'An address, directions and optional click-to-load Google Maps.', 'keywords' => ['map', 'address', 'location', 'directions']],
+        'standard.tabs' => ['label' => 'Tabs', 'category' => 'Layout', 'description' => 'Related panels containing normal editable components.', 'keywords' => ['tabs', 'panels', 'details']],
+        'standard.accordion' => ['label' => 'Accordion', 'category' => 'Layout', 'description' => 'Native disclosures containing normal editable components.', 'keywords' => ['accordion', 'toggle', 'disclosure']],
+        'standard.table' => ['label' => 'Table', 'category' => 'Information', 'description' => 'A structured table with headers and a caption.', 'keywords' => ['table', 'comparison', 'prices']],
+        'standard.table-of-contents' => ['label' => 'Table of contents', 'category' => 'Navigation', 'description' => 'A generated list of body headings and links.', 'keywords' => ['contents', 'headings', 'navigation']],
+        'standard.breadcrumbs' => ['label' => 'Breadcrumbs', 'category' => 'Navigation', 'description' => 'Published ancestor links and the current page.', 'keywords' => ['breadcrumb', 'ancestors', 'navigation']],
+        'standard.heading' => ['label' => 'Heading', 'category' => 'Essentials', 'description' => 'A heading with an explicit semantic level and optional highlighted words.', 'keywords' => ['title', 'heading', 'highlight']],
+        'standard.buttons' => ['label' => 'Button or button group', 'category' => 'Essentials', 'description' => 'One or more useful links with optional icons.', 'keywords' => ['button', 'action', 'links']],
+        'standard.icon' => ['label' => 'Icon', 'category' => 'Essentials', 'description' => 'A labelled or decorative icon from the bundled catalogue.', 'keywords' => ['symbol', 'icon']],
+        'standard.icon-list' => ['label' => 'Icon list', 'category' => 'Essentials', 'description' => 'Readable features and useful links with consistent icons.', 'keywords' => ['features', 'list', 'benefits']],
+        'standard.social-links' => ['label' => 'Social links', 'category' => 'Essentials', 'description' => 'Labelled social, website, email and telephone links.', 'keywords' => ['social', 'contact', 'icons']],
+        'standard.divider' => ['label' => 'Divider', 'category' => 'Essentials', 'description' => 'A simple visual separator.', 'keywords' => ['divider', 'line', 'separator']],
+        'standard.anchor' => ['label' => 'Named anchor', 'category' => 'Navigation', 'description' => 'A named destination for a link on this page.', 'keywords' => ['anchor', 'section', 'jump']],
         'standard.gallery' => ['label' => 'Image gallery', 'category' => 'Collections', 'description' => 'Ordered images and captions with an optional accessible lightbox.', 'keywords' => ['gallery', 'images', 'photos', 'lightbox']],
         'standard.testimonials' => ['label' => 'Testimonials', 'category' => 'Collections', 'description' => 'Fictional attributed quotations in a static single or grid presentation.', 'keywords' => ['quote', 'testimonial', 'attribution']],
         'standard.brand' => ['label' => 'Site branding', 'category' => 'Site identity', 'description' => 'An editable site name, logo and home link stored in this document.', 'keywords' => ['brand', 'logo', 'name', 'home', 'header']],

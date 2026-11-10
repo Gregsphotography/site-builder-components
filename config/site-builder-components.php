@@ -16,5 +16,7 @@ return [
         'disk' => 'public',
         'directory' => 'site-builder-media',
         'max_kilobytes' => 10240,
+        'video_max_kilobytes' => 102400,
+        'track_max_kilobytes' => 1024,
     ],
 ];

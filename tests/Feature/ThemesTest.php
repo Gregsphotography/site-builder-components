@@ -58,7 +58,8 @@ class ThemesTest extends DatabaseTestCase
                         $html = view('site-builder-components::layouts.'.$preset, ['locale' => 'de', 'title' => 'Matrix', 'slot' => $content, 'seo' => ['preview' => true]])->render();
                         $this->assertStringContainsString('data-site-builder-node="matrix"', $html);
                         $this->assertStringContainsString('data-site-builder-theme="'.$preset.'"', $html);
-                        $this->assertStringNotContainsString('<script', $html);
+                        $withoutModules = preg_replace('~<script type="module" src="/vendor/site-builder-components/(?:gallery|interactions|collections|embeds|forms)\\.js\\?v=[a-f0-9]+"></script>~', '', $html);
+                        $this->assertStringNotContainsString('<script', $withoutModules);
                         $this->assertStringNotContainsString('<img onerror', $html);
                         $this->assertStringNotContainsString('href="javascript:', $html);
                         $this->assertStringNotContainsString('src="javascript:', $html);

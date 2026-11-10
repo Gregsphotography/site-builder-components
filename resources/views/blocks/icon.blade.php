@@ -1,0 +1,1 @@
+<div {{ $attributes->class(['sb-block', 'sb-icon']) }} @if(!($props['decorative'] ?? true) && filled($props['label'])) role="img" aria-label="{{ $props['label'] }}" @else aria-hidden="true" @endif>{{ app(\SiteBuilder\Components\Rendering\Icons::class)->html($props['icon']) }}</div>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SiteBuilder\Components\Themes;
 
 use InvalidArgumentException;
+use SiteBuilder\Components\Design\StandardDesignTheme;
 
 final class ThemeCatalog
 {
@@ -15,11 +16,11 @@ final class ThemeCatalog
             'id' => 'standard.base', 'version' => 1,
             'presets' => ['minimal', 'business', 'editorial', 'host'],
             'layouts' => ['default' => 'components.default', 'minimal' => 'components.minimal', 'business' => 'components.business', 'editorial' => 'components.editorial', 'host' => 'components.host'],
-            'components' => ['standard.hero' => 1, 'standard.text' => 1, 'standard.image' => 1, 'standard.image-text' => 1, 'standard.cards' => 1, 'standard.cta' => 1, 'standard.faq' => 1, 'standard.contact-details' => 1, 'standard.brand' => 1, 'standard.navigation' => 1, 'standard.gallery' => 1, 'standard.testimonials' => 1],
+            'components' => array_fill_keys(array_keys(StandardDesignTheme::componentVariants()), 1),
             'breakpoints' => ['compact' => '48rem', 'wide' => '72rem'],
             'tokens' => ['text', 'muted', 'surface', 'subtle', 'accent', 'accent-text', 'border', 'focus', 'radius', 'width', 'section-space', 'font-body', 'font-heading'],
             'token_defaults' => ['text' => '#172b36', 'muted' => '#465d69', 'surface' => '#ffffff', 'subtle' => '#f2f6f8', 'accent' => '#174e65', 'accent-text' => '#ffffff', 'border' => '#c9d6dd', 'focus' => '#8c3c00', 'radius' => '.6rem', 'width' => '72rem', 'section-space' => 'clamp(2.5rem, 7vw, 5.5rem)', 'font-body' => 'system-ui', 'font-heading' => 'system-ui'],
-            'variants' => ['standard.hero' => ['centred', 'split', 'background'], 'standard.text' => ['default', 'narrow'], 'standard.image' => ['default', 'wide'], 'standard.image-text' => ['image-left', 'image-right'], 'standard.cards' => ['cards', 'logos'], 'standard.cta' => ['brand', 'neutral'], 'standard.faq' => ['default'], 'standard.contact-details' => ['default'], 'standard.brand' => ['text', 'logo', 'both'], 'standard.navigation' => ['default'], 'standard.gallery' => ['default'], 'standard.testimonials' => ['single', 'grid']],
+            'variants' => StandardDesignTheme::componentVariants(),
             'assets' => ['vendor/site-builder-components/components.css'],
         ];
     }

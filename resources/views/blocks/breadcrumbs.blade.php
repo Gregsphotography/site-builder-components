@@ -1,0 +1,2 @@
+@php($crumbs = app(\SiteBuilder\Core\Contracts\BreadcrumbProvider::class)->items($context))
+<nav {{ $attributes->class(['sb-block', 'sb-breadcrumbs']) }} aria-label="{{ $props['label'] ?? __('Breadcrumbs') }}"><ol>@foreach($crumbs as $crumb)<li>@if(!$loop->last && app(\SiteBuilder\Core\Rendering\SafeUrl::class)->valid($crumb['url'] ?? ''))<a href="{{ $crumb['url'] }}">{{ $crumb['label'] }}</a>@else<span @if($loop->last) aria-current="page" @endif>{{ $crumb['label'] }}</span>@endif</li>@endforeach</ol></nav>

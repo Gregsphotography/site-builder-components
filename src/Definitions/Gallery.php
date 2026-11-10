@@ -31,9 +31,10 @@ final class Gallery extends LeafDefinition implements ValidatesComponentValues
 
     public function properties(): array
     {
-        return ['columns' => P::enum(['one', 'two', 'three', 'four']), 'lightbox' => new P('boolean'),
+        return [...CollectionFilters::properties(), 'columns' => P::enum(['one', 'two', 'three', 'four']), 'lightbox' => new P('boolean'),
             'heading' => P::text(translated: true, rules: ['max:255']), 'label' => P::text(translated: true, rules: ['max:255']),
             'items' => new P('list', translated: true, rules: ['max:48'], items: P::object([
+                'tags' => CollectionFilters::tags(),
                 'image' => new P('media', nullable: true, rules: ['max:2048']), 'full_image' => new P('media', nullable: true, rules: ['max:2048']),
                 'sources' => self::sources(), 'width' => Images::dimensions(), 'height' => Images::dimensions(),
                 'alt' => P::text(rules: ['max:2000']), 'decorative' => new P('boolean'), 'caption' => P::text(rules: ['max:2000']),
