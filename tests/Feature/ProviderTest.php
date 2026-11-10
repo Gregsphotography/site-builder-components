@@ -17,7 +17,7 @@ class ProviderTest extends TestCase
         $manifest = json_decode(file_get_contents(__DIR__.'/../../composer.json'), true, flags: JSON_THROW_ON_ERROR);
         $this->assertSame('MIT', $manifest['license']);
         $this->assertSame('^8.5', $manifest['require']['php']);
-        $this->assertSame('0.5.0-rc.1', $manifest['require']['gregsphotography/site-builder-core']);
+        $this->assertSame('0.5.0-rc.2', $manifest['require']['gregsphotography/site-builder-core']);
         foreach (array_keys($manifest['require']) as $dependency) {
             $this->assertStringNotContainsString('filament', $dependency);
             $this->assertStringNotContainsString('livewire', $dependency);
