@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SiteBuilder\Components;
 
+use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\ServiceProvider;
 use SiteBuilder\Components\Commands\InstallCommand;
 use SiteBuilder\Components\Design\StandardDesignTheme;
@@ -40,7 +41,7 @@ final class ComponentsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/site-builder-components.php', 'site-builder-components');
         $this->app->singleton(TemplateCatalog::class);
         $this->app->singleton(ThemeCatalog::class);
-        $this->app->singleton(MediaLibrary::class);
+        $this->app->scoped(MediaLibrary::class);
         $this->app->singleton(StandardExamples::class);
         $this->app->singleton(StandardDesignTheme::class);
         $this->app->afterResolving(PublicAssetRegistry::class, function ($registry): void {
@@ -58,6 +59,11 @@ final class ComponentsServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->app['events']->listen(MigrationsEnded::class, function (): void {
+            if ($this->app->resolved(MediaLibrary::class)) {
+                $this->app->make(MediaLibrary::class)->clearAvailabilityCache();
+            }
+        });
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'site-builder-components');
         $components = $this->app->make(ComponentRegistry::class);
         if (config('site-builder-components.register_standard', true)) {

@@ -6,6 +6,8 @@ namespace SiteBuilder\Components\Tests\Feature;
 
 use Illuminate\Auth\GenericUser;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use LogicException;
@@ -49,6 +51,62 @@ class MediaTest extends DatabaseTestCase
         $this->assertSame('/host/path.webp', app(MediaResolver::class)->url('/host/path.webp'));
         Storage::disk('public')->delete($asset->path);
         $this->assertNull(app(MediaResolver::class)->url($asset->path));
+    }
+
+    public function test_rendering_checks_the_media_table_once_per_scope_and_keeps_files_and_disks_live(): void
+    {
+        $paths = [];
+        foreach (range(1, 3) as $number) {
+            $paths[] = app(MediaLibrary::class)->store(UploadedFile::fake()->image('image'.$number.'.png'))->path;
+        }
+        $this->app->forgetScopedInstances();
+        DB::enableQueryLog();
+        DB::flushQueryLog();
+        try {
+            foreach ($paths as $path) {
+                $this->assertNotNull(app(MediaResolver::class)->url($path));
+            }
+            $this->assertCount(4, DB::getQueryLog());
+            Storage::disk('public')->delete($paths[0]);
+            $this->assertNull(app(MediaResolver::class)->url($paths[0]));
+            config(['filesystems.disks.public.visibility' => 'private']);
+            $this->assertFalse(app(MediaLibrary::class)->available());
+            $this->assertNull(app(MediaResolver::class)->url($paths[1]));
+            config(['filesystems.disks.public.visibility' => 'public']);
+            $this->assertNotNull(app(MediaResolver::class)->url($paths[1]));
+        } finally {
+            DB::disableQueryLog();
+        }
+    }
+
+    public function test_availability_refreshes_after_a_scope_reset_and_after_migrations(): void
+    {
+        $library = app(MediaLibrary::class);
+        $this->assertTrue($library->available());
+        Schema::drop('site_builder_media_assets');
+        $this->app->forgetScopedInstances();
+        $fresh = app(MediaLibrary::class);
+        $this->assertNotSame($library, $fresh);
+        $this->assertFalse($fresh->available());
+        DB::table('migrations')->where('migration', '0001_01_01_000200_create_site_builder_media_assets_table')->delete();
+        $this->artisan('migrate', ['--path' => realpath(__DIR__.'/../../database/migrations'), '--realpath' => true, '--force' => true])->assertExitCode(0);
+        $this->assertTrue($fresh->available());
+    }
+
+    public function test_availability_is_keyed_by_database_connection(): void
+    {
+        $library = app(MediaLibrary::class);
+        $this->assertTrue($library->available());
+        $original = DB::getDefaultConnection();
+        config(['database.connections.media_empty' => ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '']]);
+        try {
+            DB::setDefaultConnection('media_empty');
+            $this->assertFalse($library->available());
+        } finally {
+            DB::setDefaultConnection($original);
+            DB::purge('media_empty');
+        }
+        $this->assertTrue($library->available());
     }
 
     public function test_alt_edits_merge_only_given_locale_and_reject_stale_versions_without_lost_updates(): void

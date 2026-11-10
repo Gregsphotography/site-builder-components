@@ -17,14 +17,28 @@ use Throwable;
 /** Optional local media ownership; host authorization belongs to the caller. */
 final class MediaLibrary
 {
+    /** @var array<string, bool> */
+    private array $tableAvailability = [];
+
     public function __construct(private Filesystems $files, private Validation $validation, private LocaleCatalog $locales) {}
 
     public function available(): bool
     {
         $disk = config('site-builder-components.media.disk', 'public');
 
-        return $this->publicLocalDisk($disk)
-            && (new MediaAsset)->getConnection()->getSchemaBuilder()->hasTable('site_builder_media_assets');
+        if (! $this->publicLocalDisk($disk)) {
+            return false;
+        }
+        $model = new MediaAsset;
+        $connection = $model->getConnection();
+        $key = json_encode([spl_object_id($connection), $connection->getName(), $connection->getDatabaseName(), $connection->getTablePrefix(), $model->getTable()], JSON_THROW_ON_ERROR);
+
+        return $this->tableAvailability[$key] ??= $connection->getSchemaBuilder()->hasTable($model->getTable());
+    }
+
+    public function clearAvailabilityCache(): void
+    {
+        $this->tableAvailability = [];
     }
 
     /** @return Collection<int, MediaAsset> */

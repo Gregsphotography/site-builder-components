@@ -23,7 +23,6 @@ use SiteBuilder\Core\Rendering\LayoutRegistry;
 use SiteBuilder\Core\Rendering\PageResponse;
 use SiteBuilder\Core\Rendering\PublicAssets;
 use SiteBuilder\Core\Rendering\RenderContext;
-use SiteBuilder\Core\SiteBuilderServiceProvider;
 use SiteBuilder\Core\SiteParts\SitePartCommands;
 use SiteBuilder\Core\SiteParts\SitePartLocks;
 use SiteBuilder\Core\SiteParts\SitePartPayload;
@@ -108,7 +107,7 @@ class CollectionsTest extends DatabaseTestCase
     public function test_repeated_immutable_global_gallery_mounts_keep_distinct_dom_ids_and_one_asset(): void
     {
         $this->artisan('vendor:publish', ['--tag' => 'site-builder-components-assets', '--force' => true])->assertExitCode(0);
-        $this->artisan('migrate', ['--path' => realpath(dirname((new \ReflectionClass(SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/site-parts-migrations'), '--realpath' => true, '--force' => true])->assertExitCode(0);
+        $this->artisan('migrate', ['--path' => realpath(dirname((new \ReflectionClass(\SiteBuilder\Core\SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/site-parts-migrations'), '--realpath' => true, '--force' => true])->assertExitCode(0);
         $actor = new GenericUser(['id' => 'collection-editor']);
         Gate::before(fn () => true);
         $part = app(SitePartCommands::class)->create($actor, 'section', ['name' => 'Repeated gallery'], SitePartPayload::document('section', $this->gallery([(object) ['image' => '/a.jpg', 'alt' => 'Example']])))->part;

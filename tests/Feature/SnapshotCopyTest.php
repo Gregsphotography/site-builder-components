@@ -36,7 +36,6 @@ use SiteBuilder\Core\Persistence\PageCommands;
 use SiteBuilder\Core\Persistence\PageLocks;
 use SiteBuilder\Core\Rendering\DocumentRenderer;
 use SiteBuilder\Core\Rendering\RenderContext;
-use SiteBuilder\Core\SiteBuilderServiceProvider;
 use SiteBuilder\Core\SiteParts\NativeGraphImportCommands;
 use SiteBuilder\Core\SiteParts\NativeGraphImportPolicy;
 use SiteBuilder\Core\SiteParts\NativeGraphMapper;
@@ -62,7 +61,7 @@ class SnapshotCopyTest extends DatabaseTestCase
     {
         parent::setUp();
         foreach (['history-migrations', 'site-parts-migrations'] as $path) {
-            $this->artisan('migrate', ['--path' => realpath(dirname((new \ReflectionClass(SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/'.$path), '--realpath' => true, '--force' => true])->assertExitCode(0);
+            $this->artisan('migrate', ['--path' => realpath(dirname((new \ReflectionClass(\SiteBuilder\Core\SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/'.$path), '--realpath' => true, '--force' => true])->assertExitCode(0);
         }
         config(['site-builder.site_parts.preview_layout' => 'components.minimal', 'site-builder-components.snapshots.menus' => ['primary' => 'Main menu']]);
         $this->actor = new GenericUser(['id' => (string) Str::uuid()]);
@@ -379,7 +378,7 @@ class SnapshotCopyTest extends DatabaseTestCase
         $target->getSchemaBuilder()->dropAllTables();
         try {
             foreach (['migrations', 'history-migrations', 'site-parts-migrations'] as $path) {
-                $this->artisan('migrate', ['--database' => $connectionName, '--path' => realpath(dirname((new \ReflectionClass(SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/'.$path), '--realpath' => true, '--force' => true])->assertExitCode(0);
+                $this->artisan('migrate', ['--database' => $connectionName, '--path' => realpath(dirname((new \ReflectionClass(\SiteBuilder\Core\SiteBuilderServiceProvider::class))->getFileName(), 2).'/database/'.$path), '--realpath' => true, '--force' => true])->assertExitCode(0);
             }
             $map = SitePartGraphMap::fromArray($identities, $choices);
             $mapped = $mapper->map($this->actor, $snapshot, $map, $target, $policy);
