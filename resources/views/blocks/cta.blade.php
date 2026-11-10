@@ -1,4 +1,4 @@
-@php($url = app(\SiteBuilder\Components\Rendering\ContentLinks::class)->url($props['page'], $props['url'], $context->locale))
+@php($url = app(\SiteBuilder\Components\Rendering\ContentLinks::class)->action($props['overlay'] ?? null, $props['page'], $props['url'], $context))
 <section {{ $attributes->class(['sb-block', 'sb-cta', 'sb-cta--'.($props['variant'] ?? 'brand')]) }}>
     @if (filled($props['heading']))<h2>{{ $props['heading'] }}</h2>@endif
     @if (filled($props['body']))<div class="sb-prose">{!! $props['body'] !!}</div>@endif

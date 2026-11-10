@@ -1,7 +1,7 @@
 <ul>@foreach($items as $item)
     @php
         $links = app(\SiteBuilder\Components\Rendering\ContentLinks::class);
-        $url = $links->url($item->page ?? null, $item->url ?? null, $context->locale);
+        $url = $links->action($item->overlay ?? null, $item->page ?? null, $item->url ?? null, $context);
         $children = $depth < 3 ? ($item->children ?? []) : [];
         $label = $item->label ?? '';
     @endphp

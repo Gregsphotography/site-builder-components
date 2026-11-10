@@ -81,13 +81,13 @@ class ComponentsTest extends TestCase
                 }
                 $node = new Node((string) Str::uuid(), $definition->type(), props: new JsonObject($props), translations: $translations, children: $definition instanceof HasDefaultChildren ? $definition->defaultChildren() : []);
                 $doc = new Document([$node]);
-                $this->assertSame([], app(DocumentValidator::class)->validate($doc, $definition->type() !== 'standard.form'));
+                $this->assertSame([], app(DocumentValidator::class)->validate($doc, ! in_array($definition->type(), ['standard.form', 'standard.content-listing', 'standard.search-box', 'standard.search-results', 'standard.image-comparison', 'standard.image-hotspots'], true)));
                 $render = app(DocumentRenderer::class)->render($doc, new RenderContext('en'));
                 $this->assertStringContainsString('data-site-builder-node="'.$node->id.'"', (string) $render->html);
                 $this->assertSame([], $render->diagnostics);
             }
         }
-        $this->assertCount(33, array_filter(array_keys(app(ComponentRegistry::class)->all()), fn (string $type): bool => str_starts_with($type, 'standard.')));
+        $this->assertCount(40, array_filter(array_keys(app(ComponentRegistry::class)->all()), fn (string $type): bool => str_starts_with($type, 'standard.')));
         $this->assertCount(4, array_filter(array_keys(app(ComponentRegistry::class)->all()), fn (string $type): bool => str_starts_with($type, 'demo.')));
         $this->assertFalse(array_any(array_keys(app()->getLoadedProviders()), fn (string $provider): bool => str_starts_with($provider, 'Filament\\') || str_starts_with($provider, 'Livewire\\') || str_starts_with($provider, 'SiteBuilder\\Filament\\')));
     }

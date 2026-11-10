@@ -31,15 +31,15 @@ final class Buttons extends LeafDefinition implements ValidatesComponentValues
 
     public function properties(): array
     {
-        return ['label' => P::text(translated: true), 'items' => new P('list', translated: true, rules: ['min:1', 'max:4'], requiredForPublish: true, items: P::object(['label' => P::text(rules: ['max:255'], requiredForPublish: true), 'url' => P::url(), 'page' => P::page(), 'variant' => P::enum(['primary', 'secondary'], nullable: true), 'icon' => P::enum(Icons::GENERAL, nullable: true)]))];
+        return ['label' => P::text(translated: true), 'items' => new P('list', translated: true, rules: ['min:1', 'max:4'], requiredForPublish: true, items: P::object(['label' => P::text(rules: ['max:255'], requiredForPublish: true), 'url' => P::url(), 'page' => P::page(), 'overlay' => P::revision(nullable: true, revisionKind: 'overlay'), 'variant' => P::enum(['primary', 'secondary'], nullable: true), 'icon' => P::enum(Icons::GENERAL, nullable: true)]))];
     }
 
     public function diagnostics(JsonObject $values, RenderContext $context, bool $publishing): array
     {
         $errors = [];
         foreach ($publishing ? ($values->get('items', []) ?? []) : [] as $index => $item) {
-            if ($item instanceof \stdClass && ($item->page ?? null) === null && ! filled($item->url ?? null)) {
-                $errors[] = new Diagnostic('required_for_publish', '/items/'.$index, 'Choose a page or URL for this button.');
+            if ($item instanceof \stdClass && ($item->overlay ?? null) === null && ($item->page ?? null) === null && ! filled($item->url ?? null)) {
+                $errors[] = new Diagnostic('required_for_publish', '/items/'.$index, 'Choose a popup, page or URL for this button.');
             }
         }
 

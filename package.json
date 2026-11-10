@@ -9,5 +9,8 @@
     },
     "devDependencies": {
         "esbuild": "^0.25.0"
+    },
+    "imports": {
+        "#site-builder-core-modals": "./vendor/gregsphotography/site-builder-core/resources/js/modals.js"
     }
 }

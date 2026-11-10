@@ -50,7 +50,7 @@ class ExamplesTest extends TestCase
     public function test_code_owned_catalog_snapshots_are_deterministic_valid_and_use_actual_renderers_for_every_variant(): void
     {
         $registry = app(StartingPointRegistry::class);
-        $this->assertCount(47, $registry->all());
+        $this->assertCount(51, $registry->all());
         foreach ($registry->all() as $descriptor) {
             $this->assertNotSame('', $descriptor->label);
             $this->assertNotSame('', $descriptor->description);

@@ -1,4 +1,5 @@
 @import './design.css';
+@import './discovery.css';
 
 /* Standard base theme v1. This file has no global element selectors or :root reset. */
 [data-site-builder-theme] {

@@ -33,6 +33,7 @@ final class CallToAction extends LeafDefinition
             'label' => PropertyDefinition::text(translated: true),
             'url' => PropertyDefinition::url(translated: true),
             'page' => PropertyDefinition::page(translated: true),
+            'overlay' => PropertyDefinition::revision(nullable: true, revisionKind: 'overlay'),
         ];
     }
 }

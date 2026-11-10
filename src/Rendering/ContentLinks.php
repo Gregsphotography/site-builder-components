@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace SiteBuilder\Components\Rendering;
 
+use Illuminate\Validation\ValidationException;
+use SiteBuilder\Core\Composition\CompositionResolver;
+use SiteBuilder\Core\Composition\OverlaySettings;
+use SiteBuilder\Core\Composition\PublishedPartReference;
 use SiteBuilder\Core\Models\Page;
 use SiteBuilder\Core\Rendering\RenderContext;
 use SiteBuilder\Core\Rendering\SafeUrl;
@@ -24,9 +28,25 @@ final class ContentLinks
         return is_string($url) && $url !== '' && $this->safe->valid($url) ? $url : null;
     }
 
+    public function action(mixed $overlay, ?int $page, ?string $url, RenderContext $context): ?string
+    {
+        if ($overlay !== null) {
+            try {
+                $reference = PublishedPartReference::from($overlay);
+                app(CompositionResolver::class)->revision($reference, 'overlay');
+
+                return '#'.OverlaySettings::id($reference, $context);
+            } catch (ValidationException|\InvalidArgumentException) {
+                return null;
+            }
+        }
+
+        return $this->url($page, $url, $context->locale);
+    }
+
     public function current(?int $page, string $url, RenderContext $context): bool
     {
-        if ($context->pageId === null) {
+        if ($context->pageId === null || str_starts_with($url, '#sb-overlay-')) {
             return false;
         }
         if ($page !== null) {

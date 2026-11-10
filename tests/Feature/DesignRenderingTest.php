@@ -105,7 +105,7 @@ class DesignRenderingTest extends DatabaseTestCase
                         $xpath = new \DOMXPath($dom);
                         $this->assertCount(1, $xpath->query('//*[@data-site-builder-design-theme="standard.base" and @data-site-builder-theme="'.$preset.'"]'));
                         $elements = $xpath->query('//*[@data-site-builder-node]');
-                        $this->assertCount(43, $elements);
+                        $this->assertCount(47, $elements);
                         $expected = $theme->classes($control->key, $option, $breakpoint)[1];
                         foreach ($elements as $element) {
                             $this->assertContains($expected, preg_split('/\s+/', $element->getAttribute('class')));

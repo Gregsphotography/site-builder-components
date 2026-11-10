@@ -41,6 +41,7 @@ final class Navigation extends LeafDefinition implements ValidatesComponentValue
             'label' => PropertyDefinition::text(rules: ['max:255']),
             'url' => new PropertyDefinition('url', nullable: true, rules: ['max:2048']),
             'page' => new PropertyDefinition('page', nullable: true, rules: ['max:9007199254740991']),
+            'overlay' => PropertyDefinition::revision(nullable: true, revisionKind: 'overlay'),
             'children' => new PropertyDefinition('list', rules: ['max:'.($level === 3 ? '0' : '100')], items: $level === 3 ? PropertyDefinition::object([]) : $this->entry($level + 1)),
         ]);
     }
@@ -73,7 +74,7 @@ final class Navigation extends LeafDefinition implements ValidatesComponentValue
                     if (! is_string($entry->label ?? null) || trim($entry->label) === '') {
                         $errors[] = new Diagnostic('required_for_publish', $location.'/label', 'Give this entry a label.');
                     }
-                    if ($children === [] && ($entry->page ?? null) === null && (! is_string($entry->url ?? null) || trim($entry->url) === '')) {
+                    if ($children === [] && ($entry->overlay ?? null) === null && ($entry->page ?? null) === null && (! is_string($entry->url ?? null) || trim($entry->url) === '')) {
                         $errors[] = new Diagnostic('required_for_publish', $location.'/url', 'A leaf entry needs a page or URL destination.');
                     }
                 }

@@ -34,6 +34,7 @@ abstract class LayoutDefinition implements ComponentDefinition, HasDefaultChildr
 
         return array_values(array_unique([
             'standard.form',
+            'standard.content-listing', 'standard.search-box', 'standard.search-results', 'standard.carousel', 'standard.timeline', 'standard.image-comparison', 'standard.image-hotspots',
             'standard.video', 'standard.location',
             'standard.tabs', 'standard.accordion', 'standard.table', 'standard.table-of-contents', 'standard.breadcrumbs',
             'standard.heading', 'standard.buttons', 'standard.icon', 'standard.icon-list', 'standard.social-links', 'standard.divider', 'standard.anchor',

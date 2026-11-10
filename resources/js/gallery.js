@@ -1,3 +1,5 @@
+import { openDialog } from '#site-builder-core-modals';
+
 const initialized = new WeakSet();
 
 export function adjacentIndex(index, delta, count) {
@@ -49,7 +51,7 @@ export function initializeGalleries(scope = document) {
             removal?.disconnect();
             image.removeAttribute('src');
             // Native modality owns background inertness. Never rewrite a host's scroll or inert state.
-            if (document.querySelector('dialog[open]')) { opener = null; return; }
+            if (dialog.closest('dialog[open]')) { opener = null; return; }
             let target = opener?.isConnected && !opener.closest('[hidden]') ? opener : root.isConnected ? root : document.querySelector('main');
             if (target) {
                 const temporary = !target.hasAttribute('tabindex') && target.tagName !== 'A';
@@ -63,8 +65,8 @@ export function initializeGalleries(scope = document) {
             triggers = allTriggers.filter(item => !item.closest('[data-sb-collection-item]')?.hidden);
             const selected = triggers.indexOf(trigger);
             if (selected < 0) return;
-            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || dialog.open || document.querySelector('dialog[open]')) return;
-            try { dialog.showModal(); } catch { return; }
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || dialog.open) return;
+            if (!openDialog(dialog, trigger)) return;
             event.preventDefault();
             opener = trigger;
             opened = true;

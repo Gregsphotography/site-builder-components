@@ -18,6 +18,8 @@ final class StandardDesignTheme implements DesignTheme
 {
     private const COMPONENTS = [
         'standard.form' => ['default'],
+        'standard.content-listing' => ['cards', 'images', 'list'], 'standard.search-box' => ['default'], 'standard.search-results' => ['cards', 'images', 'list'],
+        'standard.carousel' => ['images', 'logos', 'cards', 'testimonials', 'team'], 'standard.timeline' => ['vertical', 'alternating'], 'standard.image-comparison' => ['default'], 'standard.image-hotspots' => ['default'],
         'standard.video' => ['default'], 'standard.location' => ['default'],
         'standard.tabs' => ['default'], 'standard.tab-panel' => ['default'], 'standard.accordion' => ['default'], 'standard.accordion-item' => ['default'],
         'standard.table' => ['default'], 'standard.table-of-contents' => ['default'], 'standard.breadcrumbs' => ['default'],

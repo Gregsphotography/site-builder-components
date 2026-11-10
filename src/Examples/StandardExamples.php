@@ -17,6 +17,10 @@ use SiteBuilder\Core\Rendering\LocaleCatalog;
 final class StandardExamples
 {
     private const ENTRIES = [
+        'standard.image-comparison' => ['label' => 'Image comparison', 'category' => 'Media', 'description' => 'Compare two images with a keyboard and touch control.', 'keywords' => ['before', 'after', 'compare', 'photos']],
+        'standard.image-hotspots' => ['label' => 'Image hotspots', 'category' => 'Media', 'description' => 'Add numbered explanations to parts of an image.', 'keywords' => ['image', 'hotspot', 'details', 'annotations']],
+        'standard.carousel' => ['label' => 'Carousel', 'category' => 'Collections', 'description' => 'Show images, logos, cards, team members or quotations with one accessible carousel.', 'keywords' => ['slides', 'carousel', 'logos', 'team', 'testimonials']],
+        'standard.timeline' => ['label' => 'Timeline', 'category' => 'Information', 'description' => 'Show a sequence of milestones or published events.', 'keywords' => ['events', 'history', 'milestones', 'process']],
         'standard.video' => ['label' => 'Video', 'category' => 'Media', 'description' => 'Uploaded video or a supported video service with captions and transcript.', 'keywords' => ['video', 'youtube', 'vimeo', 'captions']],
         'standard.location' => ['label' => 'Location and map', 'category' => 'Information', 'description' => 'An address, directions and optional click-to-load Google Maps.', 'keywords' => ['map', 'address', 'location', 'directions']],
         'standard.tabs' => ['label' => 'Tabs', 'category' => 'Layout', 'description' => 'Related panels containing normal editable components.', 'keywords' => ['tabs', 'panels', 'details']],
@@ -124,6 +128,15 @@ final class StandardExamples
                 (object) ['question' => 'Where should I start?', 'answer' => '<p>Tell us what you would like to achieve. A short conversation is often the best first step.</p>'],
                 (object) ['question' => 'Can we work together?', 'answer' => '<p>We welcome thoughtful questions and practical ideas. Get in touch to explore the possibilities.</p>'],
             ]];
+        }
+        if ($type === 'standard.image-comparison') {
+            $props = [...$props, 'before_image' => self::asset('landscape'), 'after_image' => self::asset('workspace')];
+            $translated = [...$translated, 'before_alt' => 'An illustrated mountain landscape', 'after_alt' => 'An illustrated studio workspace'];
+        } elseif ($type === 'standard.image-hotspots') {
+            $props['image'] = self::asset('workspace');
+            $translated = [...$translated, 'alt' => 'An illustrated desk with a laptop, plant and mug', 'items' => [(object) ['x' => 4000, 'y' => 5000, 'title' => 'A place to work', 'body' => '<p>Keep the tools you need close at hand.</p>'], (object) ['x' => 8000, 'y' => 4000, 'title' => 'Room for a pause', 'body' => '<p>Make a little space for the next idea.</p>']]];
+        } elseif ($type === 'standard.carousel') {
+            $translated['items'] = array_map(fn ($title, $image, $excerpt) => (object) ['title' => $title, 'image' => self::asset($image), 'alt' => $title.' — fictional example', 'subtitle' => $variant === 'testimonials' ? 'Example collaborator' : '', 'excerpt' => $excerpt, 'url' => '/about'], ['Avery Quinn', 'Robin Lee', 'Sam Rivera'], $variant === 'logos' ? ['northstar', 'arc', 'northstar'] : ($variant === 'team' || $variant === 'testimonials' ? ['avery', 'robin', 'sam'] : ['landscape', 'workspace', 'landscape-small']), ['A thoughtful beginning makes the next step clear.', 'Good work grows from useful conversations.', 'Keep learning and improving together.']);
         }
         $id = 'example-'.substr(hash('sha256', $type.':'.$definition->version().':'.$locale.':'.$variant), 0, 32);
         $children = [];

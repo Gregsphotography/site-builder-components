@@ -30,6 +30,7 @@ use SiteBuilder\Core\Contracts\MediaResolver;
 use SiteBuilder\Core\Contracts\NavigationProvider;
 use SiteBuilder\Core\Contracts\RenderedDocumentProcessor;
 use SiteBuilder\Core\Design\DesignCatalog;
+use SiteBuilder\Core\Discovery\ContentTextRegistry;
 use SiteBuilder\Core\Installation\SetupRegistry;
 use SiteBuilder\Core\Rendering\LayoutRegistry;
 use SiteBuilder\Core\Rendering\PathMediaResolver;
@@ -50,10 +51,13 @@ final class ComponentsServiceProvider extends ServiceProvider
         $this->app->singleton(ThemeCatalog::class);
         $this->app->scoped(MediaLibrary::class);
         $this->app->singleton(StandardExamples::class);
+        $this->app->singleton(Rendering\ContentPresentations::class);
         $this->app->tag([Rendering\OutlineProcessor::class], RenderedDocumentProcessor::class);
         $this->app->tag([Rendering\AnchorConstraint::class], DocumentConstraint::class);
         $this->app->singleton(StandardDesignTheme::class);
         $this->app->afterResolving(PublicAssetRegistry::class, function ($registry): void {
+            $digest = substr(hash_file('sha256', __DIR__.'/../resources/dist/discovery.js'), 0, 16);
+            $registry->register('components.discovery', new PublicAsset('module', '/vendor/site-builder-components/discovery.js?v='.$digest));
             $digest = substr(hash_file('sha256', __DIR__.'/../resources/dist/gallery.js'), 0, 16);
             $registry->register('components.gallery', new PublicAsset('module', '/vendor/site-builder-components/gallery.js?v='.$digest));
             $digest = substr(hash_file('sha256', __DIR__.'/../resources/dist/interactions.js'), 0, 16);
@@ -88,6 +92,9 @@ final class ComponentsServiceProvider extends ServiceProvider
         $components = $this->app->make(ComponentRegistry::class);
         if (config('site-builder-components.register_standard', true)) {
             $components->register(Definitions\Form::class);
+            foreach ([Definitions\ContentListing::class, Definitions\SearchBox::class, Definitions\SearchResults::class, Definitions\Carousel::class, Definitions\Timeline::class, Definitions\ImageComparison::class, Definitions\ImageHotspots::class] as $definition) {
+                $components->register($definition);
+            }
             foreach ([Definitions\Video::class, Definitions\Location::class] as $definition) {
                 $components->register($definition);
             }
@@ -107,6 +114,11 @@ final class ComponentsServiceProvider extends ServiceProvider
             }
         }
         $layouts = $this->app->make(LayoutRegistry::class);
+        foreach ($components->all() as $definition) {
+            if (str_starts_with($definition::class, 'SiteBuilder\\Components\\')) {
+                $this->app->make(ContentTextRegistry::class)->register($definition->type(), $this->app->make(Rendering\StandardSearchText::class)->text(...));
+            }
+        }
         $layouts->register('components.default', 'site-builder-components::layouts.site', ['header', 'body', 'footer']);
         foreach (['minimal', 'business', 'editorial', 'host'] as $preset) {
             $layouts->register('components.'.$preset, 'site-builder-components::layouts.'.$preset, ['header', 'body', 'footer']);
