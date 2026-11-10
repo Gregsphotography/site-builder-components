@@ -158,20 +158,21 @@ function carousel(root) {
         if (motionNote) motionNote.hidden = !reduced.matches;
         schedule();
     };
-    const move = (target, interaction = true) => {
+    const move = (target, interaction = true, animate = true) => {
         if (interaction) userPaused = true;
         const state = carouselWindow(target, slides.length, perView);
         index = state.start;
         const slide = slides[index].getBoundingClientRect();
-        const frame = track.getBoundingClientRect();
+        const origin = slides[0].getBoundingClientRect();
         const rtl = getComputedStyle(track).direction === 'rtl';
-        track.scrollBy({ left: rtl ? slide.right - frame.right : slide.left - frame.left, behavior: reduced.matches ? 'instant' : 'smooth' });
+        const left = rtl ? slide.right - origin.right : slide.left - origin.left;
+        track.scrollTo({ left, behavior: animate && !reduced.matches ? 'smooth' : 'instant' });
         update();
     };
     const resized = () => {
         perView = Math.min(configured, root.clientWidth < 600 ? 1 : (root.clientWidth < 900 ? 2 : configured));
         root.style.setProperty('--sb-carousel-per-view', String(perView));
-        move(index, false);
+        move(index, false, false);
     };
     const prevClick = () => move(index - perView);
     const nextClick = () => move(index + perView);

@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.5",
-        "gregsphotography/site-builder-core": "0.5.0-rc.2",
+        "gregsphotography/site-builder-core": "0.5.0-rc.3",
         "illuminate/filesystem": "^13.40",
         "illuminate/mail": "^13.40",
         "illuminate/queue": "^13.40"

@@ -65,18 +65,20 @@ test('the actual carousel engine pauses automatic movement for hover, hidden pag
     context.mock.timers.enable({ apis: ['setTimeout'] });
     const root = new Element(), track = new Element(), controls = new Element(), previous = new Element(), next = new Element(), pause = new Element(), position = new Element(), note = new Element(), media = new Element();
     let offset = 0;
-    const slides = [0, 1, 2].map(index => { const slide = new Element(); slide.contains = () => false; slide.getBoundingClientRect = () => ({ left: index * 420 - offset, right: index * 420 - offset + 400 }); return slide; });
+    const slides = [0, 1, 2].map(index => { const slide = new Element(); slide.contains = () => false; slide.getBoundingClientRect = () => ({ left: 16 + index * 420 - offset, right: 16 + index * 420 - offset + 400 }); return slide; });
     root.dataset = { perView: '1', autoplay: 'true', interval: '3' }; root.clientWidth = 400;
     root.classList = { add() {} }; root.style = { setProperty() {} }; root.contains = () => false;
     root.querySelectorAll = () => slides;
     root.querySelector = selector => ({ '[data-carousel-track]': track, '[data-carousel-controls]': controls, '[data-carousel-prev]': previous, '[data-carousel-next]': next, '[data-carousel-pause]': pause, '[data-carousel-position]': position, '[data-carousel-motion-note]': note })[selector];
     track.getBoundingClientRect = () => ({ left: 0, right: 400 }); track.scrollBy = ({ left }) => { offset += left; };
+    track.scrollTo = ({ left }) => { offset = left; };
     pause.dataset = { playLabel: 'Play', pauseLabel: 'Pause' }; media.matches = false;
     globalThis.document = new Element(); document.hidden = false; document.activeElement = null;
     globalThis.window = new Element(); window.matchMedia = () => media;
     globalThis.getComputedStyle = () => ({ direction: 'ltr' });
     try {
         initializeDiscovery({ querySelectorAll: selector => selector === '[data-sb-carousel]' ? [root] : [] });
+        assert.equal(offset, 0, 'A padded track must remain at its first slide during initialization.');
         assert.equal(position.textContent, '1–1 of 3');
         context.mock.timers.tick(3000);
         assert.equal(position.textContent, '2–2 of 3');
@@ -99,6 +101,54 @@ test('the actual carousel engine pauses automatic movement for hover, hidden pag
         root.isConnected = false; initializeDiscovery({ querySelectorAll: () => [] });
         context.mock.timers.reset(); delete globalThis.document; delete globalThis.window; delete globalThis.getComputedStyle;
     }
+});
+
+test('padded carousels retain their position across resizing and move one visible group in either direction', context => {
+    context.mock.timers.enable({ apis: ['setTimeout'] });
+    for (const direction of ['ltr', 'rtl']) {
+        const root = new Element(), track = new Element(), controls = new Element(), previous = new Element(), next = new Element(), position = new Element(), media = new Element();
+        let offset = 0, behavior;
+        const sign = direction === 'rtl' ? -1 : 1;
+        const slides = [0, 1, 2].map(index => {
+            const slide = new Element(); slide.contains = () => false;
+            slide.getBoundingClientRect = () => direction === 'rtl'
+                ? { left: -16 - index * 420 - offset, right: 384 - index * 420 - offset }
+                : { left: 16 + index * 420 - offset, right: 416 + index * 420 - offset };
+            return slide;
+        });
+        root.dataset = { perView: '2', autoplay: 'false', interval: '3' }; root.clientWidth = 1000;
+        root.classList = { add() {} }; root.style = { setProperty() {} }; root.contains = () => false;
+        root.querySelectorAll = () => slides;
+        root.querySelector = selector => ({ '[data-carousel-track]': track, '[data-carousel-controls]': controls, '[data-carousel-prev]': previous, '[data-carousel-next]': next, '[data-carousel-position]': position })[selector];
+        track.getBoundingClientRect = () => ({ left: 0, right: 400 });
+        track.scrollBy = ({ left }) => { offset += left; };
+        track.scrollTo = options => { offset = options.left; behavior = options.behavior; };
+        media.matches = false;
+        globalThis.document = new Element(); document.hidden = false; document.activeElement = null;
+        globalThis.window = new Element(); window.matchMedia = () => media;
+        globalThis.getComputedStyle = () => ({ direction });
+        try {
+            initializeDiscovery({ querySelectorAll: selector => selector === '[data-sb-carousel]' ? [root] : [] });
+            assert.equal(offset, 0); assert.equal(behavior, 'instant');
+            window.dispatchEvent(new Event('resize')); context.mock.timers.tick(9000);
+            assert.equal(offset, 0, 'Initialization and repeated resize must not advance a non-autoplay carousel.');
+            assert.equal(position.textContent, '1–2 of 3');
+            next.dispatchEvent(new Event('click'));
+            assert.equal(offset, sign * 420); assert.equal(position.textContent, '2–3 of 3');
+            assert.equal(behavior, 'smooth');
+            root.clientWidth = 390; window.dispatchEvent(new Event('resize'));
+            assert.equal(offset, sign * 420); assert.equal(position.textContent, '2–2 of 3');
+            assert.equal(behavior, 'instant');
+            next.dispatchEvent(new Event('click'));
+            assert.equal(offset, sign * 840); assert.equal(position.textContent, '3–3 of 3');
+            previous.dispatchEvent(new Event('click'));
+            assert.equal(offset, sign * 420); assert.equal(position.textContent, '2–2 of 3');
+        } finally {
+            root.isConnected = false; initializeDiscovery({ querySelectorAll: () => [] });
+            delete globalThis.document; delete globalThis.window; delete globalThis.getComputedStyle;
+        }
+    }
+    context.mock.timers.reset();
 });
 
 test('nested native dialogs restore focus to their own trigger and keep scrolling locked until the last owned modal closes', () => {
