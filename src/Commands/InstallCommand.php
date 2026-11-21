@@ -9,7 +9,7 @@ use SiteBuilder\Core\Installation\MigrationPublisher;
 
 final class InstallCommand extends Command
 {
-    protected $signature = 'site-builder:components-install {--media : Publish the optional local media ownership migration}';
+    protected $signature = 'site-builder:components-install {--media : Publish the local media and album migrations}';
 
     protected $description = 'Publish standard component configuration and compiled assets without changing existing content';
 
@@ -22,7 +22,7 @@ final class InstallCommand extends Command
         }
         if ($this->option('media')) {
             $published = $migrations->publish(__DIR__.'/../../database/migrations', database_path('migrations'));
-            $this->components->info(count($published).' optional media migration(s) published. Run migrate and storage:link explicitly.');
+            $this->components->info(count($published).' media and album migration(s) published. Run migrate and storage:link explicitly.');
         }
         $this->components->info('Standard component assets/config published. Choose components.default or a fixed components preset layout in the host. No content was seeded.');
 

@@ -2,7 +2,7 @@
     $items = array_map(fn ($item) => (array) $item, $props['items'] ?? []);
     $links = app(\SiteBuilder\Components\Rendering\ContentLinks::class);
     $images = app(\SiteBuilder\Components\Rendering\Images::class);
-    $identity = 'sb-gallery-'.substr(hash('sha256', $context->mode.':'.($context->pageId ?? 'fragment').':'.$attributes->get('data-site-builder-render-address', $node->node->id).':'.\Illuminate\Support\Str::uuid()), 0, 32);
+    $identity = 'sb-gallery-'.substr(hash('sha256', $context->mode.':'.($context->pageId ?? 'fragment').':'.$attributes->get('data-site-builder-render-address', $attributes->get('data-site-builder-node', 'album-gallery')).':'.\Illuminate\Support\Str::uuid()), 0, 32);
     $usable = array_filter($items, fn ($item) => !empty($item['image']) && trim((($item['decorative'] ?? false) ? '' : ($item['alt'] ?? '')).($item['caption'] ?? '')) !== '');
     $enhanced = ($props['lightbox'] ?? false) && $context->mode === 'public' && $usable !== [];
     if ($enhanced) { app(\SiteBuilder\Core\Rendering\PublicAssets::class)->request('components.gallery'); }

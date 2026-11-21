@@ -7,6 +7,8 @@ return [
     'register_demo_compatibility' => true,
     'theme' => 'minimal',
     'assets' => true,
+    // Reserve /albums/{slug} under the builder's public prefix for published albums.
+    'album_routes' => false,
     // Trusted host component types that may appear inside standard layout blocks.
     'additional_layout_children' => [],
     'navigation' => ['header' => 'primary', 'footer' => 'footer'],

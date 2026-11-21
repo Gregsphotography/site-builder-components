@@ -40,7 +40,7 @@ abstract class LayoutDefinition implements ComponentDefinition, HasDefaultChildr
             'standard.heading', 'standard.buttons', 'standard.icon', 'standard.icon-list', 'standard.social-links', 'standard.divider', 'standard.anchor',
             'standard.hero', 'standard.text', 'standard.image', 'standard.image-text',
             'standard.cards', 'standard.cta', 'standard.faq', 'standard.contact-details',
-            'standard.brand', 'standard.navigation', 'standard.gallery', 'standard.testimonials',
+            'standard.brand', 'standard.navigation', 'standard.gallery', 'standard.album', 'standard.testimonials',
             'standard.container', ...($columns ? ['standard.columns'] : []),
             'core.global-reference', ...$additional,
         ]));

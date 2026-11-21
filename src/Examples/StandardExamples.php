@@ -35,6 +35,7 @@ final class StandardExamples
         'standard.social-links' => ['label' => 'Social links', 'category' => 'Essentials', 'description' => 'Labelled social, website, email and telephone links.', 'keywords' => ['social', 'contact', 'icons']],
         'standard.divider' => ['label' => 'Divider', 'category' => 'Essentials', 'description' => 'A simple visual separator.', 'keywords' => ['divider', 'line', 'separator']],
         'standard.anchor' => ['label' => 'Named anchor', 'category' => 'Navigation', 'description' => 'A named destination for a link on this page.', 'keywords' => ['anchor', 'section', 'jump']],
+        'standard.album' => ['label' => 'Photo album', 'category' => 'Collections', 'description' => 'Display a published album. Its photos update here when the album is published again.', 'keywords' => ['album', 'gallery', 'images', 'photos']],
         'standard.gallery' => ['label' => 'Image gallery', 'category' => 'Collections', 'description' => 'Ordered images and captions with an optional accessible lightbox.', 'keywords' => ['gallery', 'images', 'photos', 'lightbox']],
         'standard.testimonials' => ['label' => 'Testimonials', 'category' => 'Collections', 'description' => 'Fictional attributed quotations in a static single or grid presentation.', 'keywords' => ['quote', 'testimonial', 'attribution']],
         'standard.brand' => ['label' => 'Site branding', 'category' => 'Site identity', 'description' => 'An editable site name, logo and home link stored in this document.', 'keywords' => ['brand', 'logo', 'name', 'home', 'header']],

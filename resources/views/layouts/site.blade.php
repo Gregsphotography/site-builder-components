@@ -16,10 +16,12 @@
     <a class="sb-skip-link" href="#site-builder-content">{{ __('Skip to content') }}</a>
     @if (isset($headerSlot))
     <header class="sb-region sb-region--header">{{ $headerSlot }}</header>
+    @include('site-builder::language-switcher')
     @else
     <header class="sb-header">
         <a class="sb-brand" href="{{ url('/') }}">@if ($scaffold['logo'])<img src="{{ $scaffold['logo'] }}" alt="" width="48" height="48">@endif<span>{{ $scaffold['name'] }}</span></a>
         @if ($scaffold['header'])<nav aria-label="{{ __('Main navigation') }}">@include('site-builder-components::partials.navigation', ['items' => $scaffold['header']])</nav>@endif
+        @include('site-builder::language-switcher')
     </header>
     @endif
     <main id="site-builder-content" class="sb-main" data-site-builder-canvas tabindex="-1">{{ $slot }}</main>

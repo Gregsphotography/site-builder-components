@@ -33,7 +33,10 @@
 [data-site-builder-theme] .sb-skip-link { position: absolute; z-index: 10; inset-inline-start: 1rem; top: 1rem; padding: .75rem 1rem; background: var(--sb-surface); color: var(--sb-text); transform: translateY(-200%); }
 [data-site-builder-theme] .sb-skip-link:focus { transform: none; }
 [data-site-builder-theme] :where(.sb-header, .sb-footer, .sb-main) { max-width: var(--sb-width); margin-inline: auto; padding-inline: clamp(1rem, 4vw, 3rem); }
-[data-site-builder-theme] .sb-header { display: flex; justify-content: space-between; gap: 1.5rem; align-items: center; padding-block: 1.6rem; border-block-end: 1px solid var(--sb-border); }
+[data-site-builder-theme] .sb-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem; align-items: center; padding-block: 1.6rem; border-block-end: 1px solid var(--sb-border); }
+[data-site-builder-theme] .sb-language-switcher { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1rem; }
+[data-site-builder-theme] > .sb-language-switcher { max-width: var(--sb-width); margin-inline: auto; padding: .5rem clamp(1rem, 4vw, 3rem); }
+[data-site-builder-theme] .sb-language-switcher [aria-current] { font-weight: 700; text-decoration-style: double; }
 [data-site-builder-theme] .sb-brand { display: inline-flex; align-items: center; gap: .7rem; font-size: 1.25rem; font-weight: 750; text-decoration: none; color: var(--sb-text); }
 [data-site-builder-theme] .sb-brand img { object-fit: contain; }
 [data-site-builder-theme] :where(.sb-header, .sb-footer) nav ul { display: flex; flex-wrap: wrap; gap: .6rem 1.3rem; padding: 0; margin: 0; list-style: none; }

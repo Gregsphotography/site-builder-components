@@ -50,7 +50,7 @@ class ExamplesTest extends TestCase
     public function test_code_owned_catalog_snapshots_are_deterministic_valid_and_use_actual_renderers_for_every_variant(): void
     {
         $registry = app(StartingPointRegistry::class);
-        $this->assertCount(51, $registry->all());
+        $this->assertCount(52, $registry->all());
         foreach ($registry->all() as $descriptor) {
             $this->assertNotSame('', $descriptor->label);
             $this->assertNotSame('', $descriptor->description);
@@ -63,7 +63,7 @@ class ExamplesTest extends TestCase
                 $this->assertSame($source->digest, $again->digest);
                 $this->assertSame(app(CanonicalJson::class)->digest($source->document), $source->digest);
                 $this->assertSame($descriptor->sourceKind, $source->kind);
-                $this->assertSame([], app(DocumentValidator::class)->validate($source->document, true, ['de']));
+                $this->assertSame([], app(DocumentValidator::class)->validate($source->document, publishing: $descriptor->id !== 'component:standard.album', locales: ['de']));
                 $copy = app(DocumentCopies::class)->copy($source->document);
                 foreach ($copy->nodes as $index => $node) {
                     $this->assertNotSame($source->document->nodes[$index]->id, $node->id);

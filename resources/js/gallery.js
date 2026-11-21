@@ -10,6 +10,15 @@ export function arrowDelta(key, rtl) {
     return key === 'ArrowRight' ? (rtl ? -1 : 1) : key === 'ArrowLeft' ? (rtl ? 1 : -1) : 0;
 }
 
+export function updateNavigation(previous, next, close, index, count) {
+    // Disabling the focused button can immediately move focus to the document body.
+    const focused = close.ownerDocument.activeElement;
+    previous.disabled = index === 0;
+    next.disabled = index === count - 1;
+    if (focused === previous && previous.disabled) (next.disabled ? close : next).focus();
+    if (focused === next && next.disabled) (previous.disabled ? close : previous).focus();
+}
+
 export function initializeGalleries(scope = document) {
     const roots = [...(scope.matches?.('[data-sb-gallery]') ? [scope] : []), ...scope.querySelectorAll('[data-sb-gallery]')];
     for (const root of roots) {
@@ -40,10 +49,7 @@ export function initializeGalleries(scope = document) {
             image.onload = () => { error.hidden = true; image.hidden = false; };
             image.onerror = () => { image.hidden = true; error.hidden = false; };
             image.src = trigger.href;
-            previous.disabled = index === 0;
-            next.disabled = index === triggers.length - 1;
-            if (document.activeElement === previous && previous.disabled) next.disabled ? close.focus() : next.focus();
-            if (document.activeElement === next && next.disabled) previous.disabled ? close.focus() : previous.focus();
+            updateNavigation(previous, next, close, index, triggers.length);
         };
         const finish = () => {
             if (!opened) return;

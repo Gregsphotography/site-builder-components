@@ -34,7 +34,7 @@ final class StandardDesignTheme implements DesignTheme
         'standard.faq' => ['default'],
         'standard.contact-details' => ['default'],
         'standard.brand' => ['text', 'logo', 'both'],
-        'standard.navigation' => ['default'], 'standard.gallery' => ['default'], 'standard.testimonials' => ['single', 'grid'],
+        'standard.navigation' => ['default'], 'standard.gallery' => ['default'], 'standard.album' => ['default'], 'standard.testimonials' => ['single', 'grid'],
         'standard.section' => ['default'],
         'standard.container' => ['default'],
         'standard.columns' => ['equal', 'sidebar-start', 'sidebar-end'],

@@ -7,6 +7,7 @@ namespace SiteBuilder\Components;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use SiteBuilder\Components\Albums\PublicAlbumController;
 use SiteBuilder\Components\Commands\InstallCommand;
 use SiteBuilder\Components\Design\StandardDesignTheme;
 use SiteBuilder\Components\Examples\StandardExamples;
@@ -36,6 +37,7 @@ use SiteBuilder\Core\Rendering\LayoutRegistry;
 use SiteBuilder\Core\Rendering\PathMediaResolver;
 use SiteBuilder\Core\Rendering\PublicAsset;
 use SiteBuilder\Core\Rendering\PublicAssetRegistry;
+use SiteBuilder\Core\Routing\SiteRoutes;
 use SiteBuilder\Core\Snapshots\SnapshotSourceRegistry;
 
 final class ComponentsServiceProvider extends ServiceProvider
@@ -89,6 +91,12 @@ final class ComponentsServiceProvider extends ServiceProvider
             }
         });
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'site-builder-components');
+        if (! $this->app->routesAreCached() && config('site-builder.routes.enabled', true) && config('site-builder.routes.public', true) && config('site-builder-components.album_routes')) {
+            Route::middleware(config('site-builder.routes.middleware', ['web']))
+                ->get(SiteRoutes::publicPrefix().'/albums/{slug}', PublicAlbumController::class)
+                ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
+                ->name('site-builder.album');
+        }
         $components = $this->app->make(ComponentRegistry::class);
         if (config('site-builder-components.register_standard', true)) {
             $components->register(Definitions\Form::class);
@@ -104,7 +112,7 @@ final class ComponentsServiceProvider extends ServiceProvider
             foreach ([Definitions\Heading::class, Definitions\Buttons::class, Definitions\Icon::class, Definitions\IconList::class, Definitions\SocialLinks::class, Definitions\Divider::class, Definitions\Anchor::class] as $definition) {
                 $components->register($definition);
             }
-            foreach ([Definitions\Gallery::class, Definitions\Testimonials::class, Definitions\Brand::class, Definitions\Navigation::class, Definitions\Hero::class, Definitions\Text::class, Definitions\Image::class, Definitions\ImageText::class, Definitions\Cards::class, Definitions\CallToAction::class, Definitions\Faq::class, Definitions\ContactDetails::class, Definitions\Section::class, Definitions\Container::class, Definitions\Columns::class, Definitions\Column::class] as $definition) {
+            foreach ([Definitions\Gallery::class, Definitions\Album::class, Definitions\Testimonials::class, Definitions\Brand::class, Definitions\Navigation::class, Definitions\Hero::class, Definitions\Text::class, Definitions\Image::class, Definitions\ImageText::class, Definitions\Cards::class, Definitions\CallToAction::class, Definitions\Faq::class, Definitions\ContactDetails::class, Definitions\Section::class, Definitions\Container::class, Definitions\Columns::class, Definitions\Column::class] as $definition) {
                 $components->register($definition);
             }
         }
